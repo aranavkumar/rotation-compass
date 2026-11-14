@@ -1,0 +1,9 @@
+{
+  "framework": null,
+  "installCommand": "node --version",
+  "buildCommand": "node scripts/prepare-planner.mjs",
+  "outputDirectory": "public",
+  "functions": { "api/power.ts": { "maxDuration": 30 } },
+  "redirects": [{ "source": "/", "destination": "/planner/index.html", "permanent": false }],
+  "rewrites": [{ "source": "/demo", "destination": "/planner/demo.html" }]
+}
