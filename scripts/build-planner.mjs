@@ -1,0 +1,6 @@
+import './prepare-planner.mjs';
+import {readFileSync as read,writeFileSync,mkdirSync} from 'node:fs';
+import {stripTypeScriptTypes} from 'node:module';
+const assets={};for(const [file,type] of Object.entries({'index.html':'text/html','style.css':'text/css','ui.js':'text/javascript','schema.js':'text/javascript','contracts.js':'text/javascript','ludhiana.js':'text/javascript','evaluation-config.js':'text/javascript','evaluator.js':'text/javascript','fixture.js':'text/javascript','environment.json':'application/json'}))assets['/planner/'+file]=[type,read('public/planner/'+file,'utf8')];
+assets['/demo']=['text/html',read('public/planner/demo.html','utf8')];
+mkdirSync('dist/server',{recursive:true});writeFileSync('dist/server/index.js',stripTypeScriptTypes(read('src/power.ts','utf8').replace(/^import demo[^;]+;/,'const demo='+read('data/ludhiana-daily.json','utf8')+';'),{mode:'transform'})+'\nconst assets='+JSON.stringify(assets)+';\nexport default {async fetch(request){const p=new URL(request.url).pathname;if(p==="/api/power")return power(request);if(p==="/")return Response.redirect(new URL("/planner/index.html",request.url),302);const item=assets[p];return item?new Response(item[1],{headers:{"content-type":item[0]+"; charset=utf-8"}}):new Response("Not found",{status:404});}};');
